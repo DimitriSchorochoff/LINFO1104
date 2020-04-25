@@ -1,4 +1,12 @@
-declare
+functor
+import
+	Dictionary at x-oz://system/adt/Dictionary.ozf
+export
+	init:Init
+	saveDict:SaveDict
+	parseDict:ParseDict
+	
+define
 
 %PART Init
 %Function
@@ -27,37 +35,15 @@ end
 NumFile = 208
 
 %Main
-Dict = {Dictionary.new}
-P = {SaveDict NumFile Dict}
+proc {Init}
+	Dict = {Dictionary.new}
+	P = {SaveDict NumFile Dict}
 
-{LaunchThread NumFile P}
-
-
-%PART SaveDict
-
-fun {FunProcessMaker F}
-   local FunProcess in
-      proc {FunProcess S}
-	 case S of S1|S2 then
-	    {F S1}
-	    {FunProcess S2}
-	 end
-      end
-      FunProcess
-   end
+	{LaunchThread NumFile P}
 end
 
-fun {FunProcessMakerTwoArg F A NumFile}
-   local FunProcess in
-      proc {FunProcess S}
-	 case S of S1|S2 then
-	    {F S1 A NumFile}
-	    {FunProcessOneArg S2 A NumFile}
-	 end
-      end
-      FunProcess
-   end
-end
+
+%PART SaveDict	
 
 fun {ProcessMajDict S NumThread Dict}
    case S of S1|S2 then
@@ -112,4 +98,6 @@ fun {ParseDict Dict}
       
       DictMot
    end
+end
+
 end

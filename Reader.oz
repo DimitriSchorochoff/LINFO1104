@@ -30,8 +30,6 @@ define
         from Open.file Open.text
     end
 
-end
-
 fun{ReadFile File}
     fun {Recur N}
         Line
@@ -42,4 +40,7 @@ fun{ReadFile File}
     end
 in
     {Recur 1}
+end
+
+
 end
