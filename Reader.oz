@@ -31,3 +31,14 @@ define
     end
 
 end
+
+fun{ReadFile File}
+   fun {Recur N}
+      Line
+   in
+   Line = {Scan File N}
+   if Line == none then nil
+   else Line|{Recur N+1} end
+in
+   {Recur 1}
+end
