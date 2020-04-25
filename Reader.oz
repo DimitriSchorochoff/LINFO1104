@@ -33,12 +33,13 @@ define
 end
 
 fun{ReadFile File}
-   fun {Recur N}
-      Line
-   in
-   Line = {Scan File N}
-   if Line == none then nil
-   else Line|{Recur N+1} end
+    fun {Recur N}
+        Line
+    in
+        Line = {Scan File N}
+        if Line == none then nil
+        else Line|{Recur N+1} end
+    end
 in
-   {Recur 1}
+    {Recur 1}
 end
