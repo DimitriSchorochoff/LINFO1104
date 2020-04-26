@@ -4,13 +4,27 @@ import
 	System
 	Application
 	Reader
-define
-	D = {Dictionary.new}
-%	{Dictionary.put D 1 2}
-%	{Dictionary.put D 1 3}
+	SideFunction
+	SideFunctionDimi
+	SideFunctionAlex
 
-%	{System.show {Dictionary.condGet D 1 0}}
-%	{System.show {Dictionary.condGet D 2 0}}
-	{System.show 2}
+define
+	%Define function
+	SaveDict = SideFunctionDimi.saveDict
+	
+	%Test SaveDict
+	D = {NewDictionary}
+	P = {SaveDict 2 D}
+
+	{Send P ('Hello'#'World')#2}
+	{Send P ('Hello'#'ya')#1}
+	{Send P 0}
+	{Send P ('Hi'#'how')#4}
+	{Send P 0}
+
+	
+	{System.show {Dictionary.get D ('Hello'#'World')}}
+	{System.show {Dictionary.get D ('Hi'#'how')}}
+
 	{Application.exit 0}
 end
