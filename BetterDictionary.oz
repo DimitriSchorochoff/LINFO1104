@@ -1,3 +1,7 @@
+%BetterDictionary is a dictionary that can contain any sort of key i.e:records
+%Made by Dimitri Schorochoff
+%26/04/2020
+
 functor
 export
 	new:New
