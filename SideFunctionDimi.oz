@@ -65,6 +65,8 @@ end
 
 
 proc {MajDict Tuple Dict}
+
+	
    {Dictionary.put Dict Tuple {Dictionary.condGet Dict Tuple 0}+1}
 end
 
