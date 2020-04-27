@@ -9,31 +9,69 @@ import
 	AlterDictionary
 
 define
-%	%Define function
-%	SaveDict = SideFunctionDimi.saveDict
-%	
-%	%Test SaveDict
-%	D = {NewDictionary}
-%	P = {SaveDict 2 D}
-%
-%	{Send P ('Hello'#'World')#2}
-%	{Send P ('Hello'#'ya')#1}
-%	{Send P 0}
-%	{Send P ('Hi'#'how')#4}
-%	{Send P 0}
+	%Define function
+	SaveDict = SideFunctionDimi.saveDict
+	ParseDict = SideFunctionDimi.parseDict
+
+
+	%Test SaveDict
+	D = {AlterDictionary.new}
+	local IsDone in
+	P = {SaveDict 2 D IsDone}
+
+	{Send P ('Hello'#'World')}
+	{Send P ('Hello'#'World')}
+	{Send P ('Hello'#'World')}
+	{Send P ('Hello'#'ya')}
+	{Send P 0}
+	{Send P ('Hi'#'how')}
+	{Send P 0}
+
+	if (IsDone == true) then skip end %Waiting for IsDone to be assigned
 
 	
-%	{System.show {Dictionary.get D ('Hello'#'World')}}
-%	{System.show {Dictionary.get D ('Hi'#'how')}}
+	local TestWorked in
+	TestWorked = {NewCell true}
+	if {AlterDictionary.get D ('Hello'#'World')} \= 3 then TestWorked:=false end
+	if {AlterDictionary.get D ('Hi'#'how')} \= 1 then TestWorked:=false end
+	
 
-	D = {AlterDictionary.new}
-	{AlterDictionary.put D 2#3 7}
-	{AlterDictionary.put D 2#3 8}
-	{AlterDictionary.put D 2#4 1}
+	if @TestWorked then {System.show 'SaveDict test: completed'}
+	else {System.show 'SaveDict test: failed'}
+	end
+	end
 
-	{System.show {AlterDictionary.isIn D 2#3}}
-	{System.show {AlterDictionary.entries D}.2.1}
-	{System.show {AlterDictionary.keys D}.2.1}
-	{System.show {AlterDictionary.items D}.2.1}
+	%Test parseDict
+	D2 = {AlterDictionary.new}
+	{AlterDictionary.put D2 ('America'#'is') 4}
+	{AlterDictionary.put D2 ('America'#'suck') 2}
+	{AlterDictionary.put D2 ('Yolo'#'swag') 100}
+	
+	DParsed = {ParseDict D2}
+	
+	local TestWorked in
+	TestWorked = {NewCell true}
+
+	if {AlterDictionary.get DParsed 'America'}\='is' then TestWorked := false end
+	if {AlterDictionary.get DParsed 'Yolo'}\='swag' then TestWorked := false end
+
+	if @TestWorked then {System.show 'ParseDict test: completed'}
+	else {System.show 'ParseDict test: failed'}
+	end
+	end
+
+/*
+	%AlterDict test
+	DAlter = {AlterDictionary.new}
+	{AlterDictionary.put DAlter 2#3 7}
+	{AlterDictionary.put DAlter 2#3 8}
+	{AlterDictionary.put DAlter 2#4 1}
+
+	{System.show {AlterDictionary.isIn DAlter 2#3}}
+	{System.show {AlterDictionary.entries DAlter}.2.1}
+	{System.show {AlterDictionary.keys DAlter}.2.1}
+	{System.show {AlterDictionary.items DAlter}.2.1}
+*/
 	{Application.exit 0}
+	end
 end
