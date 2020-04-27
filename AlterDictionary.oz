@@ -1,4 +1,4 @@
-%BetterDictionary is a dictionary that can contain any sort of key i.e:records
+%AlterDictionary is a dictionary that can contain any sort of key i.e:records
 %Made by Dimitri Schorochoff
 %26/04/2020
 
@@ -12,8 +12,9 @@ export
 	entries:Entries
 	items:Items
 	isEmpty:IsEmpty
+	isIn:IsIn
 
-define
+define	
 	fun {New}
 		%Indice 0 of DictKey correspond to newIndex
 		local DictKey in
@@ -111,4 +112,5 @@ define
 
 	fun {IsEmpty D} ({Dictionary.get D.1 0} == 1) end
 
+	fun {IsIn D K} {Get D K} \= nil end
 end

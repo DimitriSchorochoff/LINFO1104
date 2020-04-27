@@ -6,7 +6,7 @@ import
 	Reader
 	SideFunction
 	SideFunctionDimi
-	BetterDictionary
+	AlterDictionary
 
 define
 %	%Define function
@@ -26,14 +26,14 @@ define
 %	{System.show {Dictionary.get D ('Hello'#'World')}}
 %	{System.show {Dictionary.get D ('Hi'#'how')}}
 
-	D = {BetterDictionary.new}
-	{BetterDictionary.put D 2#3 7}
-	{BetterDictionary.put D 2#3 8}
-	{BetterDictionary.put D 2#4 1}
+	D = {AlterDictionary.new}
+	{AlterDictionary.put D 2#3 7}
+	{AlterDictionary.put D 2#3 8}
+	{AlterDictionary.put D 2#4 1}
 
-	{System.show {BetterDictionary.condGet D 2#3 0}}
-	{System.show {BetterDictionary.entries D}.2.1}
-	{System.show {BetterDictionary.keys D}.2.1}
-	{System.show {BetterDictionary.items D}.2.1}
+	{System.show {AlterDictionary.isIn D 2#3}}
+	{System.show {AlterDictionary.entries D}.2.1}
+	{System.show {AlterDictionary.keys D}.2.1}
+	{System.show {AlterDictionary.items D}.2.1}
 	{Application.exit 0}
 end
