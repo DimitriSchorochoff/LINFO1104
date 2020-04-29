@@ -4,6 +4,7 @@ import
 export
     textfile:TextFile
     scan:Scan
+    readfile:ReadFile
 
 define
     % Fetches the N-th line in a file
@@ -30,17 +31,17 @@ define
         from Open.file Open.text
     end
 
-fun{ReadFile File}
-    fun {Recur N}
-        Line
+    fun{ReadFile File}
+        fun {Recur N}
+            Line
+        in
+            Line = {Scan File N}
+            if Line == none then nil
+            else Line|{Recur N+1} end
+        end
     in
-        Line = {Scan File N}
-        if Line == none then nil
-        else Line|{Recur N+1} end
+        {Recur 1}
     end
-in
-    {Recur 1}
-end
 
 
 end
