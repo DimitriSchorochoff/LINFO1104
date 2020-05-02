@@ -5,6 +5,7 @@ import
 export
 	funToExport:FunToExport
 	parseLine:ParseLine
+	parseWords:ParseWords
 
 define
 	proc {FunToExport} skip end
@@ -27,7 +28,13 @@ define
 
 		in
 			case Text
-			of 32|T then  %trucs qui separent des mots mais pas les phrases (a priori que espace)
+			of 32|T then  %trucs qui separent des mots mais pas les phrases (espace)
+
+				if AccWord == nil then {Split T nil AccPhrase}
+				else {Split T nil {AddToEnd AccPhrase AccWord}}
+				end
+
+			of 130|T then  %trucs qui separent des mots mais pas les phrases (,)
 
 				if AccWord == nil then {Split T nil AccPhrase}
 				else {Split T nil {AddToEnd AccPhrase AccWord}}
@@ -81,49 +88,41 @@ define
 
 	end
 
+	fun {OneGram Words OtherPhrases}
+
+		case Words 
+		of nil then   %a priori ce cas est useless, a enlever si on voit que ca marche sans
+			{ParseWords OtherPhrases}
+		[] H|nil then 
+			{ParseWords OtherPhrases}
+		[] W1|W2|T then 
+			(W1#W2)|{OneGram W2|T OtherPhrases}
+		else 1 end
+		
+	end
+
+
+	fun {TwoGram Words OtherPhrases}
+
+		case Words 
+		of nil then  %a priori ce cas est useless, a enlever si on voit que ca marche sans
+			{ParseWords OtherPhrases}
+		[] H|nil then  %celui la aussi probablement
+			{ParseWords OtherPhrases}
+		[] W1|W2|nil then 
+			{ParseWords OtherPhrases}
+		[] W1|W2|W3|T then 
+			((W1#W2#W3)|{TwoGram W2|W3|T OtherPhrases}
+		else 1 end
+		
+	end
 
 	fun{ParseWords Ptext}
 
-		fun {OneGram Words OtherPhrases}
-
-			case Words 
-			of nil then   %a priori ce cas est useless, a enlever si on voit que ca marche sans
-				{ParseWords OtherPhrases}
-			[] H|nil then 
-				{ParseWords OtherPhrases}
-			[] W1|W2|T then 
-				(W1|W2|nil)|{OneGram W2|T}
-			else %ptet default je sais plus
-				{Browse -1} %c'est pas sensé arriver si tout se passe bien
-			end
-			
-		end
-
-
-		fun {TwoGram Words OtherPhrases}
-
-			case Words 
-			of nil then  %a priori ce cas est useless, a enlever si on voit que ca marche sans
-				{ParseWords OtherPhrases}
-			[] H|nil then  %celui la aussi probablement
-				{ParseWords OtherPhrases}
-			[] W1|W2|nil then 
-				{ParseWords OtherPhrases}
-			[] W1|W2|W3|T then 
-				((W1|W2|nil)|W3|nil)|{TwoGram W2|W3|T}
-			else %ptet default je sais plus 
-				{Browse -1} %c'est pas sensé arriver si tout se passe bien
-			end
-			
-		end
-	in
-
 		case Ptext
-		of nil then
-			nil
-		[] H|T then 
-			{OneGram H T}
-		end
+		of nil then nil
+		[] H|T then {TwoGram H T}
+		else 2 end
 
 	end
 
