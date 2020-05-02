@@ -4,6 +4,7 @@ import
 	System
 export
 	funToExport:FunToExport
+	ftd:FileToDict
 
 define
 	proc {FunToExport} skip end
