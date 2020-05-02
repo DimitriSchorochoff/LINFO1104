@@ -110,7 +110,7 @@ define
 			[] W1|W2|nil then 
 				{ParseWords OtherPhrases}
 			[] W1|W2|W3|T then 
-				((W1|W2|nil))|W3|nil)|{TwoGram W2|W3|T}
+				((W1|W2|nil)|W3|nil)|{TwoGram W2|W3|T}
 			else %ptet default je sais plus 
 				{Browse -1} %c'est pas sensé arriver si tout se passe bien
 			end
