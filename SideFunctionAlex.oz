@@ -112,7 +112,7 @@ define
 		[] W1|W2|nil then 
 			{ParseWords OtherPhrases}
 		[] W1|W2|W3|T then 
-			((W1#W2#)W3)|{TwoGram W2|W3|T OtherPhrases}
+			((W1#W2)#W3)|{TwoGram W2|W3|T OtherPhrases}
 		else 1 end
 		
 	end
