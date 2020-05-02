@@ -10,7 +10,7 @@ define
 	proc {FunToExport} skip end
 
 
-	proc{ParseLine Text StreamOut}
+	fun{ParseLine Text}
 
 		fun{Split Text AccWord AccPhrase}
 
@@ -76,42 +76,56 @@ define
 			end
 		end
 
-		proc {OneGram Words StreamOut}
+	in
+		{Split Text nil nil}
+
+	end
+
+
+	fun{ParseWords Ptext}
+
+		fun {OneGram Words OtherPhrases}
 
 			case Words 
-			of nil then pass  %a priori ce cas est useless, a enlever si on voit que ca marche sans
-			[] H|nil then pass
+			of nil then   %a priori ce cas est useless, a enlever si on voit que ca marche sans
+				{ParseWords OtherPhrases}
+			[] H|nil then 
+				{ParseWords OtherPhrases}
 			[] W1|W2|T then 
-				% send W1|W2|nil au stream, mdr on fait comment?
-				{OneGram W2|T StreamOut}
+				(W1|W2|nil)|{OneGram W2|T}
 			else %ptet default je sais plus
 				{Browse -1} %c'est pas sensé arriver si tout se passe bien
 			end
 			
 		end
 
-		proc {TwoGram Words StreamOut}
+
+		fun {TwoGram Words OtherPhrases}
 
 			case Words 
-			of nil then pass  %a priori ce cas est useless, a enlever si on voit que ca marche sans
-			[] H|nil then pass %celui la aussi probablement
-			[] W1|W2|nil then pass
+			of nil then  %a priori ce cas est useless, a enlever si on voit que ca marche sans
+				{ParseWords OtherPhrases}
+			[] H|nil then  %celui la aussi probablement
+				{ParseWords OtherPhrases}
+			[] W1|W2|nil then 
+				{ParseWords OtherPhrases}
 			[] W1|W2|W3|T then 
-				% send (W1|W2|nil)|W3|nil au stream, mdr on fait comment?
-				{TwoGram W2|W3|T StreamOut}
+				((W1|W2|nil))|W3|nil)|{TwoGram W2|W3|T}
 			else %ptet default je sais plus 
 				{Browse -1} %c'est pas sensé arriver si tout se passe bien
 			end
 			
 		end
-
-		ParsedText
 	in
-		ParsedText = {Split Text nil nil}
 
-		for Phrase in ParsedText do
-			{OneGram Phrase StreamOut}               %changer ici si on veut passer de One a Two gram
+		case Ptext
+		of nil then
+			nil
+		[] H|T then 
+			{OneGram H T}
 		end
+
 	end
+
 	
 end
