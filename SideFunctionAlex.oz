@@ -34,13 +34,13 @@ define
 				else {Split T nil {AddToEnd AccPhrase AccWord}}
 				end
 
-			of 130|T then  %trucs qui separent des mots mais pas les phrases (,)
+			[] 130|T then %trucs qui separent les phrases (,)
 
-				if AccWord == nil then {Split T nil AccPhrase}
-				else {Split T nil {AddToEnd AccPhrase AccWord}}
+				if {AddToEnd AccPhrase AccWord} == nil then {Split T nil nil}
+				else {AddToEnd AccPhrase AccWord}|{Split T nil nil}
 				end
 
-			[] 46|T then %trucs qui separent les phrases (point)
+			[] 46|T then %trucs qui separent les phrases (.)
 
 				if {AddToEnd AccPhrase AccWord} == nil then {Split T nil nil}
 				else {AddToEnd AccPhrase AccWord}|{Split T nil nil}
