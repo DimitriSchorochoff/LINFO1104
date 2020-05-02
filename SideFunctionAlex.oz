@@ -34,7 +34,7 @@ define
 				end
 
 			[] 46|T then %trucs qui separent les phrases (point)
-		
+
 				if {AddToEnd AccPhrase AccWord} == nil then {Split T nil nil}
 				else {AddToEnd AccPhrase AccWord}|{Split T nil nil}
 				end
@@ -76,8 +76,42 @@ define
 			end
 		end
 
+		proc {OneGram Words StreamOut}
+
+			case Words 
+			of nil then pass  %a priori ce cas est useless, a enlever si on voit que ca marche sans
+			[] H|nil then pass
+			[] W1|W2|T then 
+				% send W1|W2|nil au stream, mdr on fait comment?
+				{OneGram W2|T StreamOut}
+			else %ptet default je sais plus
+				{Browse -1} %c'est pas sensé arriver si tout se passe bien
+			end
+			
+		end
+
+		proc {TwoGram Words StreamOut}
+
+			case Words 
+			of nil then pass  %a priori ce cas est useless, a enlever si on voit que ca marche sans
+			[] H|nil then pass %celui la aussi probablement
+			[] W1|W2|nil then pass
+			[] W1|W2|W3|T then 
+				% send (W1|W2|nil)|W3|nil au stream, mdr on fait comment?
+				{TwoGram W2|W3|T StreamOut}
+			else %ptet default je sais plus 
+				{Browse -1} %c'est pas sensé arriver si tout se passe bien
+			end
+			
+		end
+
+		ParsedText
 	in
-		{Split Text nil nil}
+		ParsedText = {Split Text nil nil}
+
+		for Phrase in ParsedText do
+			{OneGram Phrase StreamOut}               %changer ici si on veut passer de One a Two gram
+		end
 	end
 	
 end
