@@ -40,73 +40,75 @@ define
 
 	fun{ParseLine Text}
 
-		fun{Split Text AccWord AccPhrase}
+		fun{Split Text AccWord AccPhrase AccText}
 
 			case Text
 			of 32|T then  %trucs qui separent des mots mais pas les phrases (espace)
 
-				if AccWord == nil then {Split T nil AccPhrase}
-				else {Split T nil {AddToEnd AccPhrase AccWord}}
+				if AccWord == nil then {Split T nil AccPhrase AccText}
+				else {Split T nil {AddToEnd AccPhrase AccWord} AccText}
 				end
 
 			[] 10|T then %trucs qui separent les phrases (\n)
 		
-				if {AddToEnd AccPhrase AccWord} == nil then {Split T nil nil}
-				else {AddToEnd AccPhrase AccWord}|{Split T nil nil}
+				if {AddToEnd AccPhrase AccWord} == nil then {Split T nil nil AccText}
+				else {AddToEnd AccPhrase AccWord}|{Split T nil nil AccText}
 				end
 
 			[] 130|T then %trucs qui separent les phrases (,)
 
-				if {AddToEnd AccPhrase AccWord} == nil then {Split T nil nil}
-				else {AddToEnd AccPhrase AccWord}|{Split T nil nil}
+				if {AddToEnd AccPhrase AccWord} == nil then {Split T nil nil AccText}
+				else {AddToEnd AccPhrase AccWord}|{Split T nil nil AccText}
 				end
 
 			[] 46|T then %trucs qui separent les phrases (.)
 
-				if {AddToEnd AccPhrase AccWord} == nil then {Split T nil nil}
-				else {AddToEnd AccPhrase AccWord}|{Split T nil nil}
+				if {AddToEnd AccPhrase AccWord} == nil then {Split T nil nil AccText}
+				else {AddToEnd AccPhrase AccWord}|{Split T nil nil AccText}
 				end
 
 			[] 33|T then %trucs qui separent les phrases (!)
 		
-				if {AddToEnd AccPhrase AccWord} == nil then {Split T nil nil}
-				else {AddToEnd AccPhrase AccWord}|{Split T nil nil}
+				if {AddToEnd AccPhrase AccWord} == nil then {Split T nil nil AccText}
+				else {AddToEnd AccPhrase AccWord}|{Split T nil nil AccText}
 				end
 			[] 34|T then %trucs qui separent les phrases (")
 		
-				if {AddToEnd AccPhrase AccWord} == nil then {Split T nil nil}
-				else {AddToEnd AccPhrase AccWord}|{Split T nil nil}
+				if {AddToEnd AccPhrase AccWord} == nil then {Split T nil nil AccText}
+				else {AddToEnd AccPhrase AccWord}|{Split T nil nil AccText}
 				end
 			[] 63|T then %trucs qui separent les phrases (?)
 		
-				if {AddToEnd AccPhrase AccWord} == nil then {Split T nil nil}
-				else {AddToEnd AccPhrase AccWord}|{Split T nil nil}
+				if {AddToEnd AccPhrase AccWord} == nil then {Split T nil nil AccText}
+				else {AddToEnd AccPhrase AccWord}|{Split T nil nil AccText}
 				end
 			[] 58|T then %trucs qui separent les phrases (:)
 		
-				if {AddToEnd AccPhrase AccWord} == nil then {Split T nil nil}
-				else {AddToEnd AccPhrase AccWord}|{Split T nil nil}
+				if {AddToEnd AccPhrase AccWord} == nil then {Split T nil nil AccText}
+				else {AddToEnd AccPhrase AccWord}|{Split T nil nil AccText}
 				end
 			[] 59|T then %trucs qui separent les phrases (;)
 		
-				if {AddToEnd AccPhrase AccWord} == nil then {Split T nil nil}
-				else {AddToEnd AccPhrase AccWord}|{Split T nil nil}
+				if {AddToEnd AccPhrase AccWord} == nil then {Split T nil nil AccText}
+				else {AddToEnd AccPhrase AccWord}|{Split T nil nil AccText}
 				end
 
 			[] H|T then   %juste une lettre normale
 
-				{Split T {AddToEnd AccWord H} AccPhrase}
+				{Split T {AddToEnd AccWord H} AccPhrase AccText}
 						
 			[] nil then   %la fin de tout le texte
-				if {AddToEnd AccPhrase AccWord} == nil then nil
-				else {AddToEnd AccPhrase AccWord}|nil end
+				if {AddToEnd AccPhrase AccWord} == nil then {ParseLine AccText}
+				else {AddToEnd AccPhrase AccWord}|{ParseLine AccText} end
 
 			end
 		end
 
 	in
-		{Split Text nil nil}
-
+		case Text 
+		of H|T then 
+			{Split H nil nil T}
+		[] nil then nil end
 	end
 
 	proc {OneGram Words OtherPhrases Port}
