@@ -4,13 +4,15 @@ import
 	System
 export
 	funToExport:FunToExport
-	ftd:FileToDict
+	readFile.ReadFile
+	parseLine:ParseLine
+	parseWords:ParseWords
 
 define
 	proc {FunToExport} skip end
 
 
-	proc{FileToDict InFile Port}
+	proc{ReadFile InFile}
 		fun {Recur N}
             Line
         in
@@ -19,11 +21,7 @@ define
             else Line|{Recur N+1} end
         end
     in
-		for Line in {Recur 1} do
-			{ParseWords {ParseLine Line} Port}
-		end
-
-		{Send Port 0}
+		{Recur 0}
 	end
 
 
