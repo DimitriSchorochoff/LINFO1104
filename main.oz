@@ -5,6 +5,7 @@ import
     Application
     OS
     Browser
+    AlterDictionary
 
     Reader
 define
@@ -16,6 +17,11 @@ define
     fun {GetFirstLine IN_NAME}
         {Reader.scan {New Reader.textfile init(name:IN_NAME)} 1}
     end
+
+%%% Make the dictionary
+D = {AlterDictionary.new}
+{AlterDictionary.put D "Hello" "World"}
+{AlterDictionary.put D "America" "is"}
 
 %%% GUI
     % Make the window description, all the parameters are explained here:
@@ -29,9 +35,11 @@ define
         text(handle:Text2 width:28 height:5 background:black foreground:white glue:w wrap:word)
         action:proc{$}{Application.exit 0} end % quit app gracefully on window closing
     )
-    proc {Press} Inserted in
+    proc {Press} Inserted Filtered Pred in
         Inserted = {Text1 getText(p(1 0) 'end' $)} % example using coordinates to get text
-        {Text2 set(1:Inserted)} % you can get/set text this way too
+	Filtered = {List.take Inserted ({List.length Inserted}-1)}
+	Pred = {AlterDictionary.condGet D Filtered "No prediction"}
+	        {Text2 set(1:Pred)} % you can get/set text this way too
     end
     % Build the layout from the description
     W={QTk.build Description}
