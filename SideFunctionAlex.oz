@@ -177,14 +177,6 @@ define
 		{SubLastTwoWords {ParseLine Text}}
 	end
 
-	fun{LastWords N Text}
-		fun{SubLastWords N Text}
-			case Text
-			of 
-		end
-	in	
-
-	end
 
 
 end
