@@ -7,6 +7,8 @@ export
 	readFile.ReadFile
 	parseLine:ParseLine
 	parseWords:ParseWords
+	lastWord:LastWord
+	lastTwoWords:LastTwoWords
 
 define
 	proc {FunToExport} skip end
@@ -150,6 +152,39 @@ define
 		else {Browse 2} end
 
 	end
-
 	
+
+	fun{LastWord Text}
+		fun{SubLastWord Text}
+			case Text 
+			of W|nil then W 
+			[] H|T then {SubLastWord T}
+			else nil end
+		end
+	in
+		{SubLastWord {ParseLine Text}}
+	end
+
+
+	fun{LastTwoWords Text}
+		fun{SubLastTwoWords Text}
+			case Text 
+			of W|nil then W 
+			[] H|T then {SubLastTwoWords T}
+			else nil end
+		end
+	in
+		{SubLastTwoWords {ParseLine Text}}
+	end
+
+	fun{LastWords N Text}
+		fun{SubLastWords N Text}
+			case Text
+			of 
+		end
+	in	
+
+	end
+
+
 end
