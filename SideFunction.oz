@@ -244,13 +244,45 @@ end
 	end
 
 	proc{ParseWords Ptext Port}
-
 		case Ptext
 		of nil then skip
 		[] H|T then {TwoGram H T}
 		else {Browse 2} end
-
 	end
 
+	fun{FindLastPhrase Text}
+		case Text
+		of H|nil then H
+		[] H|T then {FindLastPhrase T}
+		else {Browse 7}
+		end	
+	end
+
+	fun{LastWord Text}
+		fun{SubLastWord Phrase}
+			case Phrase
+			of W|nil then W 
+			[] H|T then {SubLastWord T}
+			else nil end
+		end
+		LastPhrase
+	in
+		LastPhrase = {FindLastPhrase {ParseLine Text|nil}}
+		{SubLastWord LastPhrase}
+	end
+
+
+	fun{LastTwoWords Text}
+		fun{SubLastTwoWords Text}
+			case Text 
+			of W|nil then W 
+			[] H|T then {SubLastTwoWords T}
+			else nil end
+		end
+		LastPhrase
+	in
+		LastPhrase = {FindLastPhrase {ParseLine Text|nil}}
+		{SubLastTwoWords LastPhrase}
+	end
 	
 end
