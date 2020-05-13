@@ -152,17 +152,26 @@ define
 		else {Browse 2} end
 
 	end
-	
+
+	fun{FindLastPhrase Text}
+		case Text
+		of H|nil then H
+		[] H|T then {FindLastPhrase T}
+		else {Browse 7}
+		end	
+	end
 
 	fun{LastWord Text}
-		fun{SubLastWord Text}
-			case Text 
+		fun{SubLastWord Phrase}
+			case Phrase
 			of W|nil then W 
 			[] H|T then {SubLastWord T}
 			else nil end
 		end
+		LastPhrase
 	in
-		{SubLastWord {ParseLine Text}}
+		LastPhrase = {FindLastPhrase {ParseLine Text|nil}}
+		{SubLastWord LastPhrase}
 	end
 
 
@@ -173,9 +182,12 @@ define
 			[] H|T then {SubLastTwoWords T}
 			else nil end
 		end
+		LastPhrase
 	in
-		{SubLastTwoWords {ParseLine Text}}
+		LastPhrase = {FindLastPhrase {ParseLine Text|nil}}
+		{SubLastTwoWords LastPhrase}
 	end
+
 
 
 
