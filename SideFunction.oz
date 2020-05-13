@@ -245,7 +245,7 @@ end
 
 	proc{ParseWords Ptext Port}
 		case Ptext
-		of nil then skip
+		of nil then {Send Port 0}
 		[] H|T then {TwoGram H T Port}
 		else {Browse 2} end
 	end
