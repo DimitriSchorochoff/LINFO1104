@@ -20,7 +20,7 @@ define
         in
             Line = {Reader.scan File N}   %pas sur de si j'ai bien utilisé la fonction externe
             if Line == none then nil
-            else Line|{Recur N+1} end
+            else Line|{Recur (N+1)} end
         end
     in
 		{Recur 0}
@@ -148,7 +148,7 @@ define
 
 		case Ptext
 		of nil then {Send Port 0}
-		[] H|T then {TwoGram H T}
+		[] H|T then {TwoGram H T Port}
 		else {Browse 2} end
 
 	end
@@ -187,8 +187,6 @@ define
 		LastPhrase = {FindLastPhrase {ParseLine Text|nil}}
 		{SubLastTwoWords LastPhrase}
 	end
-
-
 
 
 end
