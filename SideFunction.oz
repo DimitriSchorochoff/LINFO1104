@@ -222,7 +222,7 @@ end
 		[] W1|W2|T then 
 			{Send Port (W1#W2)}
 			{OneGram W2|T OtherPhrases Port}
-		else {Browser.browse 1} end
+		else {Browse 1} end
 		
 	end
 
@@ -246,7 +246,7 @@ end
 	proc{ParseWords Ptext Port}
 		case Ptext
 		of nil then skip
-		[] H|T then {TwoGram H T}
+		[] H|T then {TwoGram H T Port}
 		else {Browse 2} end
 	end
 
