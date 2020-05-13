@@ -113,7 +113,7 @@ fun {ParseDict Dict}
 end
 
 
-	proc{ReadFile InFile}
+	fun{ReadFile InFile}
 		fun {Recur N}
             Line
         in
