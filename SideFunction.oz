@@ -113,16 +113,16 @@ fun {ParseDict Dict}
 end
 
 
-	fun{ReadFile InFile}
-		fun {Recur N}
+	fun{ReadFile Filename}
+		fun {Recur N InFile}
             Line
         in
             Line = {Reader.scan InFile N}   %pas sur de si j'ai bien utilisé la fonction externe
             if Line == none then nil
             else Line|{Recur N+1} end
         end
-    in
-		{Recur 0}
+    in	
+		{Recur 0 {New Reader.textfile init(name:InFile)}}
 	end
 
 
