@@ -122,7 +122,7 @@ end
             else Line|{Recur N+1} end
         end
     in	
-		{Recur 0 {New Reader.textfile init(name:InFile)}}
+		{Recur 0 {New Reader.textfile init(name:Filename)}}
 	end
 
 
