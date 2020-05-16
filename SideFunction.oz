@@ -31,17 +31,19 @@ fun {Filename N}
 end 
 
 proc {LaunchThread NumFile P}
-   for I in 1..NumFile do
+   if NumFile == 0 then skip end
+
    local Fname S in
       Fname = {Filename NumFile}
       thread S = {ReadFile Fname} end
       thread {ParseWords {ParseLine S} P} end
    end
-   end
+
+  {LaunchThread NumFile-1 P}
 end
 
 %Param
-NumFile = 3
+NumFile = 208
 
 /*
 %Main
@@ -51,7 +53,8 @@ fun {Init}
 		P = {SaveDict NumFile Dict IsDone}
 
 		{LaunchThread NumFile P}
-		if IsDone == true then skip end
+
+		{Wait IsDone}
 		
 		{ParseDict Dict}
 	end
@@ -85,7 +88,13 @@ fun {ParseDict Dict}
       DictMot = {AlterDictionary.new}
       DictVal = {AlterDictionary.new}
       
-      for (Key#Pred)#Value in {AlterDictionary.entries Dict} do
+      for Entry in {AlterDictionary.entries Dict} do
+	 % Entry format: (Key#Pred)#Value
+	 local Key Pred Value in
+	    Key = Entry.1.1
+	    Pred = Entry.1.2
+	    Value = Entry.2
+
 	    if Value > {AlterDictionary.condGet DictVal Key 0} then
 	       {AlterDictionary.put DictMot Key Pred}
 	       {AlterDictionary.put DictVal Key Value}
@@ -205,42 +214,42 @@ end
 		[] nil then nil end
 	end
 
-	proc {OneGram Words OtherPhrases Port}
+	fun {OneGram Words OtherPhrases}
 
 		case Words 
 		of nil then   %a priori ce cas est useless, a enlever si on voit que ca marche sans
-			{ParseWords OtherPhrases Port}
+			{ParseWords OtherPhrases}
 		[] H|nil then 
-			{ParseWords OtherPhrases Port}
+			{ParseWords OtherPhrases}
 		[] W1|W2|T then 
-			{Send Port (W1#W2)}
-			{OneGram W2|T OtherPhrases Port}
-		else {Browse 1} end
+			%{Send Port (W1#W2)}
+			(W1#W2)|{OneGram W2|T OtherPhrases}
+		end
 		
 	end
 
 
-	proc {TwoGram Words OtherPhrases Port}
+	fun {TwoGram Words OtherPhrases}
 
 		case Words 
 		of nil then  %a priori ce cas est useless, a enlever si on voit que ca marche sans
-			{ParseWords OtherPhrases Port}
+			{ParseWords OtherPhrases}
 		[] H|nil then  %celui la aussi probablement
-			{ParseWords OtherPhrases Port}
+			{ParseWords OtherPhrases}
 		[] W1|W2|nil then 
-			{ParseWords OtherPhrases Port}
+			{ParseWords OtherPhrases}
 		[] W1|W2|W3|T then 
-			{Send Port (W1#W2)#W3 }
-			{TwoGram W2|W3|T OtherPhrases Port}
-		else {Browse 1} end
+			%{Send Port (W1#W2)#W3 }
+			((W1#W2)#W3)|{TwoGram W2|W3|T OtherPhrases}
+		end
 		
 	end
 
-	proc{ParseWords Ptext Port}
+	fun{ParseWords Ptext}
 		case Ptext
-		of nil then {System.show 0} {Send Port 0}
-		[] H|T then {OneGram H T Port}
-		else {Browse 2} end
+		of nil then nil %{Send Port 0}
+		[] H|T then {OneGram H T}
+		end
 	end
 
 
