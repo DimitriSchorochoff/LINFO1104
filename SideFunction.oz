@@ -88,13 +88,7 @@ fun {ParseDict Dict}
       DictMot = {AlterDictionary.new}
       DictVal = {AlterDictionary.new}
       
-      for Entry in {AlterDictionary.entries Dict} do
-	 % Entry format: (Key#Pred)#Value
-	 local Key Pred Value in
-	    Key = Entry.1.1
-	    Pred = Entry.1.2
-	    Value = Entry.2
-
+      for (Key#Pred)#Value in {AlterDictionary.entries Dict} do
 	    if Value > {AlterDictionary.condGet DictVal Key 0} then
 	       {AlterDictionary.put DictMot Key Pred}
 	       {AlterDictionary.put DictVal Key Value}
