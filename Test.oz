@@ -61,11 +61,16 @@ define
 	end
 
 	%Test AddToEnd
-	local TestWorked in
+	local TestWorked A B in
 
 		TestWorked = {NewCell true}
 
-		if{SideFunction.addToEnd "Donal" "d"} \= "Donald" then TestWorked := false end
+		if{SideFunction.addToEnd "Donal" 100} \= "Donald" then TestWorked := false end
+		if{SideFunction.addToEnd ["Make" "America" "Great"] "Again"} \= ["Make" "America" "Great" "Again"] then TestWorked := false end
+
+		if @TestWorked then {System.show 'AddToEnd test: completed'}
+		else {System.show 'AddToEnd test: failed'}
+		end
 	end
 /*
 	%AlterDict test
