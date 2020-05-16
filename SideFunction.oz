@@ -12,6 +12,7 @@ export
 	saveDict:SaveDict
 	parseDict:ParseDict
 	addToEnd:AddToEnd
+	lastWord:LastWord
 	
 define
 Browse = Browser.browse
