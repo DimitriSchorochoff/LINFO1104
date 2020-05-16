@@ -42,7 +42,7 @@ proc {LaunchThread NumFile P}
 end
 
 %Param
-NumFile = 208
+NumFile = 3
 
 %Main
 fun {Init}
@@ -51,11 +51,7 @@ fun {Init}
 		P = {SaveDict NumFile Dict IsDone}
 
 		{LaunchThread NumFile P}
-		{System.show 1}
-
 		if IsDone == true then skip end
-
-		{System.show 2}
 		
 		{ParseDict Dict}
 	end
@@ -67,6 +63,7 @@ end
 proc {ProcessMajDict S NumThread Dict IsDone}
 % Detect signal and end if last thread ended
       if S.1 == 0 then
+		{System.show 1}
 		if NumThread==1 then IsDone=true
 		else {ProcessMajDict S.2 NumThread-1 Dict IsDone}
 		end
@@ -99,13 +96,7 @@ fun {ParseDict Dict}
       DictMot = {AlterDictionary.new}
       DictVal = {AlterDictionary.new}
       
-      for Entry in {AlterDictionary.entries Dict} do
-	 % Entry format: (Key#Pred)#Value
-	 local Key Pred Value in
-	    Key = Entry.1.1
-	    Pred = Entry.1.2
-	    Value = Entry.2
-
+      for (Key#Pred)#Value in {AlterDictionary.entries Dict} do
 	    if Value > {AlterDictionary.condGet DictVal Key 0} then
 	       {AlterDictionary.put DictMot Key Pred}
 	       {AlterDictionary.put DictVal Key Value}
@@ -260,7 +251,7 @@ end
 
 	proc{ParseWords Ptext Port}
 		case Ptext
-		of nil then {Send Port 0}
+		of nil then {System.show 0} {Send Port 0}
 		[] H|T then {OneGram H T Port}
 		else {Browse 2} end
 	end
@@ -276,7 +267,7 @@ end
 	fun{LastWord Text}
 		LastPhrase
 	in
-		LastPhrase = {GetLast {GetLast Text|nil}}
+		LastPhrase = {GetLast {ParseLine Text|nil}}
 		{GetLast LastPhrase}
 	end
 

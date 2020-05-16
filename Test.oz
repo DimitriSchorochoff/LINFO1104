@@ -12,10 +12,12 @@ define
 	Init = SideFunction.init
 	SaveDict = SideFunction.saveDict
 	ParseDict = SideFunction.parseDict
-
+	
 	%Test init
-	D = {Init}
-	{System.show {AlterDictionary.get D "America"}}
+	Dicti = {Init}
+	{System.show {AlterDictionary.get Dicti "America"}}
+	
+
 
 	%Test SaveDict
 	D = {AlterDictionary.new}
