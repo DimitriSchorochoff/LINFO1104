@@ -9,11 +9,13 @@ export
 	parseLine:ParseLine
 	parseWords:ParseWords
 	init:Init
+	filename:Filename
 	saveDict:SaveDict
 	parseDict:ParseDict
 	addToEnd:AddToEnd
 	lastWord:LastWord
-	
+	launchThread:LaunchThread
+
 define
 Browse = Browser.browse
 
@@ -35,7 +37,7 @@ proc {LaunchThread NumFile P}
    local Fname S in
       Fname = {Filename NumFile}
       thread S = {ReadFile Fname} end
-      thread {ParseLine S P} end
+      thread {ParseWords {ParseLine S} P} end
    end
 
   {LaunchThread NumFile-1 P}
