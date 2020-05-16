@@ -34,7 +34,7 @@ define
 	TestWorked = {NewCell true}
 	if {AlterDictionary.get D ('Hello'#'World')} \= 3 then TestWorked:=false end
 	if {AlterDictionary.get D ('Hi'#'how')} \= 1 then TestWorked:=false end
-	
+
 
 	if @TestWorked then {System.show 'SaveDict test: completed'}
 	else {System.show 'SaveDict test: failed'}
@@ -60,6 +60,13 @@ define
 	end
 	end
 
+	%Test AddToEnd
+	local TestWorked in
+
+		TestWorked = {NewCell true}
+
+		if{SideFunction.addToEnd "Donal" "d"} \= "Donald" then TestWorked := false end
+	end
 /*
 	%AlterDict test
 	DAlter = {AlterDictionary.new}

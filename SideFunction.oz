@@ -11,6 +11,7 @@ export
 	init:Init
 	saveDict:SaveDict
 	parseDict:ParseDict
+	addToEnd:AddToEnd
 	
 define
 Browse = Browser.browse
@@ -113,17 +114,20 @@ fun {ParseDict Dict}
 end
 
 
-	fun{ReadFile Filename}
-		fun {Recur N InFile}
-            Line
+    fun{ReadFile Filename}
+        fun {Recur InFile}
+            Line = {InFile getS($)}
         in
-            Line = {Reader.scan InFile N}   %pas sur de si j'ai bien utilisé la fonction externe
-            if Line == none then nil
-            else Line|{Recur N+1} end
+            if Line == false then
+                {InFile close}
+                nil
+            else 
+                Line|{Recur InFile}
+            end
         end
-    in	
-		{Recur 0 {New Reader.textfile init(name:Filename)}}
-	end
+    in
+        {Recur {New Reader.textfile init(name:Filename)} }
+    end
 
 
 
@@ -193,6 +197,11 @@ end
 				if {AddToEnd AccPhrase AccWord} == nil then {Split T nil nil AccText}
 				else {AddToEnd AccPhrase AccWord}|{Split T nil nil AccText}
 				end
+			[] 13|T then %trucs qui separent les phrases (une sorte de \n il semblerait)
+		
+				if {AddToEnd AccPhrase AccWord} == nil then {Split T nil nil AccText}
+				else {AddToEnd AccPhrase AccWord}|{Split T nil nil AccText}
+				end
 
 			[] H|T then   %juste une lettre normale
 
@@ -204,7 +213,9 @@ end
 
 			end
 		end
+		
 
+				
 	in
 		case Text 
 		of H|T then 
@@ -246,29 +257,23 @@ end
 	proc{ParseWords Ptext Port}
 		case Ptext
 		of nil then {Send Port 0}
-		[] H|T then {TwoGram H T Port}
+		[] H|T then {OneGram H T Port}
 		else {Browse 2} end
 	end
 
-	fun{FindLastPhrase Text}
-		case Text
-		of H|nil then H
-		[] H|T then {FindLastPhrase T}
-		else {Browse 7}
-		end	
+
+	fun{GetLast Phrase}
+		case Phrase
+		of W|nil then W 
+		[] H|T then {GetLast T}
+		else nil end
 	end
 
 	fun{LastWord Text}
-		fun{SubLastWord Phrase}
-			case Phrase
-			of W|nil then W 
-			[] H|T then {SubLastWord T}
-			else nil end
-		end
 		LastPhrase
 	in
-		LastPhrase = {FindLastPhrase {ParseLine Text|nil}}
-		{SubLastWord LastPhrase}
+		LastPhrase = {GetLast {GetLast Text|nil}}
+		{GetLast LastPhrase}
 	end
 
 
@@ -281,7 +286,7 @@ end
 		end
 		LastPhrase
 	in
-		LastPhrase = {FindLastPhrase {ParseLine Text|nil}}
+		LastPhrase = {GetLast {ParseLine Text|nil}}
 		{SubLastTwoWords LastPhrase}
 	end
 	
