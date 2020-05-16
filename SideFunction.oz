@@ -8,7 +8,6 @@ export
 	readFile:ReadFile
 	parseLine:ParseLine
 	parseWords:ParseWords
-	init:Init
 	filename:Filename
 	saveDict:SaveDict
 	parseDict:ParseDict
@@ -44,6 +43,7 @@ end
 %Param
 NumFile = 3
 
+/*
 %Main
 fun {Init}
 	local Dict P IsDone in
@@ -56,23 +56,17 @@ fun {Init}
 		{ParseDict Dict}
 	end
 end
-
+*/
 
 %PART SaveDict	
-
-proc {ProcessMajDict S NumThread Dict IsDone}
+proc {ProcessMajDict S Dict P}
 % Detect signal and end if last thread ended
-      if S.1 == 0 then
-		{System.show 1}
-		if NumThread==1 then IsDone=true
-		else {ProcessMajDict S.2 NumThread-1 Dict IsDone}
-		end
-
-%Common way
-      else
-	 {MajDict S.1 Dict}
-	 {ProcessMajDict S.2 NumThread Dict IsDone}
-      end
+	case S of 
+		nil then {Send P Dict}
+		[] S1|S2 then 
+			{MajDict S1 Dict} 
+			{ProcessMajDict S2 Dict P}
+	end
 end
 
 
@@ -81,13 +75,8 @@ proc {MajDict Tuple Dict}
 end
 
 
-fun {SaveDict NumFile Dict IsDone}
-   local S P in
-      {NewPort S P}
-      thread {ProcessMajDict S NumFile Dict IsDone} end
-      
-      P
-   end
+proc {SaveDict S P}
+	thread {ProcessMajDict S {AlterDictionary.new} P} end
 end
 
 
@@ -101,13 +90,11 @@ fun {ParseDict Dict}
 	       {AlterDictionary.put DictMot Key Pred}
 	       {AlterDictionary.put DictVal Key Value}
 	    end
-	 end
       end
       
       DictMot
    end
 end
-
 
     fun{ReadFile Filename}
         fun {Recur InFile}

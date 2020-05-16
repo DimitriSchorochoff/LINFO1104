@@ -9,36 +9,30 @@ import
 
 define
 	%Define function
-	Init = SideFunction.init
+	%Init = SideFunction.init
 	SaveDict = SideFunction.saveDict
 	ParseDict = SideFunction.parseDict
 	
+	/*
 	%Test init
 	Dicti = {Init}
 	{System.show {AlterDictionary.get Dicti "America"}}
-	
-
+	*/
 
 	%Test SaveDict
-	D = {AlterDictionary.new}
-	local IsDone in
-	P = {SaveDict 2 D IsDone}
+	local F in
+	P = {NewPort F} 
+	S = ('Hello'#'World')|('Hello'#'World')|('Yo'#'bro')|nil
 
-	{Send P ('Hello'#'World')}
-	{Send P ('Hello'#'World')}
-	{Send P ('Hello'#'World')}
-	{Send P ('Hello'#'ya')}
-	{Send P 0}
-	{Send P ('Hi'#'how')}
-	{Send P 0}
+	{SaveDict S P}
 
-	if (IsDone == true) then skip end %Waiting for IsDone to be assigned
+	D = F.1
 
 	
 	local TestWorked in
 	TestWorked = {NewCell true}
-	if {AlterDictionary.get D ('Hello'#'World')} \= 3 then TestWorked:=false end
-	if {AlterDictionary.get D ('Hi'#'how')} \= 1 then TestWorked:=false end
+	if {AlterDictionary.get D ('Hello'#'World')} \= 2 then TestWorked:=false end
+	if {AlterDictionary.get D ('Yo'#'bro')} \= 1 then TestWorked:=false end
 
 
 	if @TestWorked then {System.show 'SaveDict test: completed'}
