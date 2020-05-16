@@ -5,14 +5,17 @@ import
 	Application
 	Reader
 	SideFunction
-	SideFunctionDimi
 	AlterDictionary
 
 define
 	%Define function
-	SaveDict = SideFunctionDimi.saveDict
-	ParseDict = SideFunctionDimi.parseDict
+	Init = SideFunction.init
+	SaveDict = SideFunction.saveDict
+	ParseDict = SideFunction.parseDict
 
+	%Test init
+	D = {Init}
+	{System.show {AlterDictionary.get D "America"}}
 
 	%Test SaveDict
 	D = {AlterDictionary.new}

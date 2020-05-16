@@ -1,5 +1,5 @@
 all : main.oza
-main.oza : main.oz Test.oz Reader.ozf SideFunction.ozf SideFunctionDimi.ozf AlterDictionary.ozf
+main.oza : main.oz Test.oz Reader.ozf SideFunction.ozf AlterDictionary.ozf
 	ozc -c main.oz -o main.oza
 	ozc -c Test.oz -o Test.oza
 %.ozf : %.oz

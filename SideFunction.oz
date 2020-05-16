@@ -32,15 +32,13 @@ fun {Filename N}
 end 
 
 proc {LaunchThread NumFile P}
-   if NumFile == 0 then skip end
-
+   for I in 1..NumFile do
    local Fname S in
       Fname = {Filename NumFile}
       thread S = {ReadFile Fname} end
       thread {ParseWords {ParseLine S} P} end
    end
-
-  {LaunchThread NumFile-1 P}
+   end
 end
 
 %Param
@@ -53,8 +51,11 @@ fun {Init}
 		P = {SaveDict NumFile Dict IsDone}
 
 		{LaunchThread NumFile P}
+		{System.show 1}
 
-		{Wait IsDone}
+		if IsDone == true then skip end
+
+		{System.show 2}
 		
 		{ParseDict Dict}
 	end
