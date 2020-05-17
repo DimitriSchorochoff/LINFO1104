@@ -92,7 +92,7 @@ define
 
 
 	%Test AddToEnd
-	local TestWorked A B in
+	local TestWorked in
 
 		TestWorked = {NewCell true}
 
@@ -101,6 +101,31 @@ define
 
 		if @TestWorked then {System.show 'AddToEnd test: completed'}
 		else {System.show 'AddToEnd test: failed'}
+		end
+	end
+
+	%Test ParseLine
+	local TestWorked in
+
+		TestWorked = {NewCell true}
+
+		if{SideFunction.parseLine ["Make America great again. covfefe" "Donald Trump"]} \= [["Make" "America" "great" "again"]["covfefe"]["Donald" "Trump"]] then TestWorked := false end
+		if{SideFunction.parseLine ["America great!!!!! America   not   bad!!!"]} \= [["America" "great"]["America" "not" "bad"]] then TestWorked:= false end
+		
+		if @TestWorked then {System.show 'ParseLine test: completed'}
+		else {System.show 'ParseLine test: failed'}
+		end
+	end
+
+	%Test ParseWords OneGram
+	local TestWorked in
+		
+		TestWorked = {NewCell true}
+
+		if{SideFunction.parseWords [["Make" "America" "great" "again"]["covfefe"]["Donald" "Trump"]]} \= ["Make"#"America" "America"#"great" "great"#"again" "Donald"#"Trump"] then TestWorked := false end
+
+		if @TestWorked then {System.show 'ParseWords with OneGram test: completed'}
+		else {System.show 'ParseWords with one Gram test: failed'}
 		end
 	end
 /*
