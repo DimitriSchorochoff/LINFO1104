@@ -321,6 +321,7 @@ end
 		fun{SubLastTwoWords Text}
 			case Text 
 			of W|nil then W 
+			[] W1|W2|nil then (W1#W2)
 			[] H|T then {SubLastTwoWords T}
 			else nil end
 		end
