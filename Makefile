@@ -14,9 +14,6 @@ test: Test.oza
 run : main.oza
 	ozengine main.oza
 
-testou : testou.oz Reader.ozf SideFunction.ozf AlterDictionary.ozf
-	ozc -c testou.oz -o testou.oza
-	ozengine testou.oza
 
 clean :
 	rm -f *.oza *.ozf
