@@ -26,20 +26,27 @@ define
 	end
 
 	proc {Put D K V}
+		local C in
+		C = {NewCell true}
+
 		if ({Not {IsEmpty D}}) then
+		
 		%Check if K is already a Key
 		for Entry in {Dictionary.entries D.1} do
-			if K == Entry.2 then {Dictionary.put D.2 Entry.1 V} end
+			if K == Entry.2 then C:=false {Dictionary.put D.2 Entry.1 V} end
 		end
 		end
-
-		local Index in
-			Index = {Dictionary.get D.1 0}
+		
+		if @C then
+			local Index in
+				Index = {Dictionary.get D.1 0}
 			
-			{Dictionary.put D.1 Index K}
-			{Dictionary.put D.2 Index V}
+				{Dictionary.put D.1 Index K}
+				{Dictionary.put D.2 Index V}
 			
-			{Dictionary.put D.1 0 Index+1}
+				{Dictionary.put D.1 0 Index+1}
+			end
+		end
 		end
 	end
 
