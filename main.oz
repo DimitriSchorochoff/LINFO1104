@@ -10,6 +10,7 @@ import
     Reader
 define
 %%% Easier macros for imported functions
+    Init = SideFunction.init
     Browse = Browser.browse
     Show = System.show
 
@@ -19,9 +20,11 @@ define
     end
 
 %%% Make the dictionary
-D = {AlterDictionary.new}
-{AlterDictionary.put D "Hello" "World"}
-{AlterDictionary.put D "America" "is"}
+%D = {AlterDictionary.new}
+%{AlterDictionary.put D "Hello" "World"}
+%{AlterDictionary.put D "America" "is"}
+
+D = {Init}
 
 %%% GUI
     % Make the window description, all the parameters are explained here:
@@ -42,7 +45,7 @@ D = {AlterDictionary.new}
     )
     proc {Press} Inserted Filtered Pred in
         Inserted = {Text1 getText(p(1 0) 'end' $)} % example using coordinates to get text
-	Filtered = {SideFunction.lastWord Inserted}
+	Filtered = {SideFunction.lastTwoWords Inserted}
 	Pred = {AlterDictionary.condGet D Filtered "No prediction"}
 	{Text2 set(1:Pred)} % you can get/set text this way too
     end
@@ -50,7 +53,7 @@ D = {AlterDictionary.new}
 
     proc {AddPredict} Inserted Filtered Filtered2 Pred in
 	Inserted = {Text1 getText(p(1 0) 'end' $)}
-	Filtered = {SideFunction.lastWord Inserted}
+	Filtered = {SideFunction.lastTwoWords Inserted}
 	Filtered2 = {Append {List.take Inserted {List.length Inserted}-1} " "}
 	Pred = {AlterDictionary.condGet D Filtered ""}
 	

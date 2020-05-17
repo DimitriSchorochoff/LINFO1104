@@ -18,8 +18,7 @@ define
 	%Test init
 	Dicti = {Init}
 	{System.show Dicti}
-	{System.show {AlterDictionary.entries}}
-	%{System.show {AlterDictionary.get Dicti "America"}}
+	{System.show {AlterDictionary.get Dicti "America"}}
 
 	%Test SaveDict
 	local P F S in

@@ -15,6 +15,7 @@ export
 	parseDict:ParseDict
 	addToEnd:AddToEnd
 	lastWord:LastWord
+	lastTwoWords:LastTwoWords
 	launchThread:LaunchThread
 
 define
@@ -45,10 +46,34 @@ proc {LaunchThread NumFile P}
 end
 
 %Param
-NumFile = 3
+NumFile = 4
 
 
 %Main
+fun {Init}
+	local Dict P IsDone in
+		Dict = {AlterDictionary.new}
+		P = {MergeDict Dict NumFile IsDone}
+
+		for I in 1..NumFile do
+			local S1 S2 S3 in
+				thread S1 = {ReadFile {Filename I}} end
+				thread S2 = {ParseLine S1} end
+				thread S3 = {ParseWords S2} end
+
+				{SaveDict S3 P}
+			end
+		end
+		
+		if IsDone then skip end
+
+		{ParseDict Dict}
+	end
+end
+
+
+
+/*
 fun {Init}
 	local Dict P IsDone in
 		Dict = {AlterDictionary.new}
@@ -63,6 +88,7 @@ fun {Init}
 		%{ParseDict Dict}
 	end
 end
+*/
 
 %PART SaveDict	
 proc {ProcessMajDict S Dict P}
