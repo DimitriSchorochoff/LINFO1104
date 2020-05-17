@@ -5,6 +5,7 @@ import
 	AlterDictionary
 	Reader
 export
+	init:Init
 	readFile:ReadFile
 	parseLine:ParseLine
 	parseWords:ParseWords
@@ -32,39 +33,39 @@ fun {Filename N}
 end 
 
 proc {LaunchThread NumFile P}
-   if NumFile == 0 then skip end
-
-   local Fname S in
-      Fname = {Filename NumFile}
-      thread S = {ReadFile Fname} end
-      thread {ParseWords {ParseLine S} P} end
+   for I in 1..NumFile do
+       local Fname S1 S2 S3 in
+           Fname = {Filename I}
+           thread S1 = {ReadFile Fname} end
+           thread S2 = {ParseLine S1} end
+           thread S3 = {ParseWords S2} end
+           {SaveDict S3 P} %SaveDict launch thread by it's own
+       end
    end
-
-  {LaunchThread NumFile-1 P}
 end
 
 %Param
-NumFile = 208
+NumFile = 3
 
-/*
+
 %Main
 fun {Init}
 	local Dict P IsDone in
 		Dict = {AlterDictionary.new}
-		P = {SaveDict NumFile Dict IsDone}
+		P = {MergeDict NumFile Dict IsDone}
 
 		{LaunchThread NumFile P}
 
-		{Wait IsDone}
+		if IsDone then skip end
 		
-		{ParseDict Dict}
+		Dict
+		
+		%{ParseDict Dict}
 	end
 end
-*/
 
 %PART SaveDict	
 proc {ProcessMajDict S Dict P}
-% Detect signal and end if last thread ended
 	case S of 
 		nil then {Send P Dict}
 		[] S1|S2 then 
@@ -93,19 +94,23 @@ fun {MergeDict Dict Num IsDone}
 	end
 end
 
+
 proc {ProcessMergeDictionaries S Dict Num IsDone}
 	if Num == 0 then IsDone = true
 	else
-		for Entry in {AlterDictionary.entries S.1} do
+		case S of S1|S2 then
+		
+		for Entry in {AlterDictionary.entries S1} do
 			local Value in
 				Value = {AlterDictionary.condGet Dict Entry.1 0}
 				{AlterDictionary.put Dict Entry.1 Value+Entry.2}
 			end
 		end
-		{ProcessMergeDictionaries S.2 Dict Num-1 IsDone}
+		
+		{ProcessMergeDictionaries S2 Dict Num-1 IsDone}
+		end
 	end
 end	
-
 
 fun {ParseDict Dict}
    local DictMot DictVal in

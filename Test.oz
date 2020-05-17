@@ -9,31 +9,33 @@ import
 
 define
 	%Define function
-	%Init = SideFunction.init
+	Init = SideFunction.init
 	SaveDict = SideFunction.saveDict
 	MergeDict = SideFunction.mergeDict
 	ParseDict = SideFunction.parseDict
-	
-	/*
+
+
 	%Test init
 	Dicti = {Init}
-	{System.show {AlterDictionary.get Dicti "America"}}
-	*/
+	{System.show Dicti}
+	{System.show {AlterDictionary.entries}}
+	%{System.show {AlterDictionary.get Dicti "America"}}
 
 	%Test SaveDict
-	local F in
+	local P F S in
 	P = {NewPort F} 
-	S = ('Hello'#'World')|('Hello'#'World')|('Yo'#'bro')|nil
-	{SaveDict S P}
+
+	thread {SaveDict S P} end
+
+	S = ('Hello'#'World')|('Hello'#'World')|('Yo'#'bro')|('Hello'#'World')|nil
 
 	D = F.1
 
 	
 	local TestWorked in
 	TestWorked = {NewCell true}
-	if {AlterDictionary.get D ('Hello'#'World')} \= 2 then TestWorked:=false end
+	if {AlterDictionary.get D ('Hello'#'World')} \= 3 then TestWorked:=false end
 	if {AlterDictionary.get D ('Yo'#'bro')} \= 1 then TestWorked:=false end
-
 
 	if @TestWorked then {System.show 'SaveDict test: completed'}
 	else {System.show 'SaveDict test: failed'}
@@ -64,19 +66,22 @@ define
 		Dictio = {AlterDictionary.new}
 		P = {MergeDict Dictio 2 IsDone}
 
-
+		thread
 		Dict1 = {AlterDictionary.new}
 		{AlterDictionary.put Dict1 ("America"#"is") 3}
 		{AlterDictionary.put Dict1 ("Yolo"#"Swag") 2}
 		
 		{Send P Dict1}
+		end
 
+		thread
 		Dict2 = {AlterDictionary.new}
 		{AlterDictionary.put Dict2 ("America"#"is") 7}
 		{AlterDictionary.put Dict2 ("Yolo"#"Damn") 1}
 		
 		{Send P Dict2}
-		
+		end
+
 		if IsDone == true then skip end
 		
 		TestWorked = {NewCell true}
@@ -90,6 +95,29 @@ define
 		end
 	end
 
+	%Test SaveDict->MergeDict
+	local Didico P IsDone S1 S2 TestWorked in
+		Didico = {AlterDictionary.new}
+		P = {MergeDict Didico 3 IsDone}
+
+		{SaveDict nil P}
+		thread {SaveDict S1 P} end
+		thread {SaveDict S2 P} end
+
+		thread S1 = ("Hollow"#"Destiny")|("True"#"Gamer")|("Hollow"#"Destiny")|nil end
+		thread S2 = ("Ayaya"#"song")|("Hollow"#"Destiny")|nil end
+
+		if IsDone then skip end
+
+		TestWorked = {NewCell true}
+		
+		if {AlterDictionary.get Didico ("Hollow"#"Destiny")} \= 3 then TestWorked:=false end
+		if {AlterDictionary.get Didico ("True"#"Gamer")} \= 1 then TestWorked:=false end
+
+		if @TestWorked then {System.show  'SaveDictIntoMergeDict test: completed'}
+		else {System.show 'SaveDictIntoMergeDict test: failed'}
+		end
+	end
 
 	%Test AddToEnd
 	local TestWorked A B in
@@ -103,18 +131,19 @@ define
 		else {System.show 'AddToEnd test: failed'}
 		end
 	end
-/*
+	/*
 	%AlterDict test
 	DAlter = {AlterDictionary.new}
 	{AlterDictionary.put DAlter 2#3 7}
 	{AlterDictionary.put DAlter 2#3 8}
 	{AlterDictionary.put DAlter 2#4 1}
+	{AlterDictionary.put DAlter 2#3 3}
 
 	{System.show {AlterDictionary.isIn DAlter 2#3}}
-	{System.show {AlterDictionary.entries DAlter}.2.1}
+	for Entry in {AlterDictionary.entries DAlter} do {System.show Entry} end
 	{System.show {AlterDictionary.keys DAlter}.2.1}
 	{System.show {AlterDictionary.items DAlter}.2.1}
-*/
+	*/
 	{Application.exit 0}
 	end
 end
