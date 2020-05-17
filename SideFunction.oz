@@ -10,6 +10,7 @@ export
 	parseWords:ParseWords
 	filename:Filename
 	saveDict:SaveDict
+	mergeDict:MergeDict
 	parseDict:ParseDict
 	addToEnd:AddToEnd
 	lastWord:LastWord
@@ -81,6 +82,29 @@ end
 proc {SaveDict S P}
 	thread {ProcessMajDict S {AlterDictionary.new} P} end
 end
+
+
+%Merge Dictionary
+fun {MergeDict Dict Num IsDone}
+	local P S in
+		P = {NewPort S}
+		thread {ProcessMergeDictionaries S Dict Num IsDone} end
+		P 
+	end
+end
+
+proc {ProcessMergeDictionaries S Dict Num IsDone}
+	if Num == 0 then IsDone = true
+	else
+		for Entry in {AlterDictionary.entries S.1} do
+			local Value in
+				Value = {AlterDictionary.condGet Dict Entry.1 0}
+				{AlterDictionary.put Dict Entry.1 Value+Entry.2}
+			end
+		end
+		{ProcessMergeDictionaries S.2 Dict Num-1 IsDone}
+	end
+end	
 
 
 fun {ParseDict Dict}

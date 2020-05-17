@@ -11,6 +11,7 @@ define
 	%Define function
 	%Init = SideFunction.init
 	SaveDict = SideFunction.saveDict
+	MergeDict = SideFunction.mergeDict
 	ParseDict = SideFunction.parseDict
 	
 	/*
@@ -23,7 +24,6 @@ define
 	local F in
 	P = {NewPort F} 
 	S = ('Hello'#'World')|('Hello'#'World')|('Yo'#'bro')|nil
-
 	{SaveDict S P}
 
 	D = F.1
@@ -58,6 +58,38 @@ define
 	else {System.show 'ParseDict test: failed'}
 	end
 	end
+
+	%Test MergeDictionary
+	local P	Dictio IsDone Dict1 Dict2 TestWorked in
+		Dictio = {AlterDictionary.new}
+		P = {MergeDict Dictio 2 IsDone}
+
+
+		Dict1 = {AlterDictionary.new}
+		{AlterDictionary.put Dict1 ("America"#"is") 3}
+		{AlterDictionary.put Dict1 ("Yolo"#"Swag") 2}
+		
+		{Send P Dict1}
+
+		Dict2 = {AlterDictionary.new}
+		{AlterDictionary.put Dict2 ("America"#"is") 7}
+		{AlterDictionary.put Dict2 ("Yolo"#"Damn") 1}
+		
+		{Send P Dict2}
+		
+		if IsDone == true then skip end
+		
+		TestWorked = {NewCell true}
+	
+		if {AlterDictionary.get Dictio ("America"#"is")} \= 10 then TestWorked:=false end
+		if {AlterDictionary.get Dictio ("Yolo"#"Swag")} \= 2 then TestWorked:= false end
+		if {AlterDictionary.get Dictio ("Yolo"#"Damn")} \= 1 then TestWorked:= false end
+
+		if @TestWorked then {System.show 'MergeDict test: completed'}
+		else {System.show 'MergeDict test: failed'}
+		end
+	end
+
 
 	%Test AddToEnd
 	local TestWorked A B in
