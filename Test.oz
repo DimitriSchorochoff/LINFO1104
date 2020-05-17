@@ -15,10 +15,6 @@ define
 	ParseDict = SideFunction.parseDict
 
 
-	%Test init
-	Dicti = {Init}
-	{System.show Dicti}
-	{System.show {AlterDictionary.get Dicti "America"}}
 
 	%Test SaveDict
 	local P F S in
@@ -155,6 +151,17 @@ define
 		else {System.show 'ParseWords with one Gram test: failed'}
 		end
 	end
+
+	%Test init
+	local D TestWorked in
+		TestWorked = {NewCell true}
+	
+		{System.show 'Start Init test: (it might take a while)'}
+		D = {Init}
+		{System.show 'Init test: completed'}
+		end
+	end
+
 	/*
 	%AlterDict test
 	DAlter = {AlterDictionary.new}
@@ -169,5 +176,4 @@ define
 	{System.show {AlterDictionary.items DAlter}.2.1}
 	*/
 	{Application.exit 0}
-	end
 end

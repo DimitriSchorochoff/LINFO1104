@@ -20,10 +20,6 @@ define
     end
 
 %%% Make the dictionary
-%D = {AlterDictionary.new}
-%{AlterDictionary.put D "Hello" "World"}
-%{AlterDictionary.put D "America" "is"}
-
 D = {Init}
 
 %%% GUI
@@ -45,7 +41,7 @@ D = {Init}
     )
     proc {Press} Inserted Filtered Pred in
         Inserted = {Text1 getText(p(1 0) 'end' $)} % example using coordinates to get text
-	Filtered = {SideFunction.lastTwoWords Inserted}
+	Filtered = {SideFunction.lastWord Inserted}
 	Pred = {AlterDictionary.condGet D Filtered "No prediction"}
 	{Text2 set(1:Pred)} % you can get/set text this way too
     end
@@ -53,7 +49,7 @@ D = {Init}
 
     proc {AddPredict} Inserted Filtered Filtered2 Pred in
 	Inserted = {Text1 getText(p(1 0) 'end' $)}
-	Filtered = {SideFunction.lastTwoWords Inserted}
+	Filtered = {SideFunction.lastWord Inserted}
 	Filtered2 = {Append {List.take Inserted {List.length Inserted}-1} " "}
 	Pred = {AlterDictionary.condGet D Filtered ""}
 	

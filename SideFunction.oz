@@ -6,6 +6,8 @@ import
 	Reader
 export
 	init:Init
+	
+	%For testing
 	readFile:ReadFile
 	parseLine:ParseLine
 	parseWords:ParseWords
@@ -16,11 +18,10 @@ export
 	addToEnd:AddToEnd
 	lastWord:LastWord
 	lastTwoWords:LastTwoWords
-	launchThread:LaunchThread
 
 define
-Browse = Browser.browse
-
+%Param
+NumFile = 4
 
 %PART Init
 %Function
@@ -32,22 +33,6 @@ fun {Filename N}
       {Append P2 ".txt"}
    end
 end 
-
-proc {LaunchThread NumFile P}
-   for I in 1..NumFile do
-       local Fname S1 S2 S3 in
-           Fname = {Filename I}
-           thread S1 = {ReadFile Fname} end
-           thread S2 = {ParseLine S1} end
-           thread S3 = {ParseWords S2} end
-           {SaveDict S3 P} %SaveDict launch thread by it's own
-       end
-   end
-end
-
-%Param
-NumFile = 4
-
 
 %Main
 fun {Init}
@@ -70,25 +55,6 @@ fun {Init}
 		{ParseDict Dict}
 	end
 end
-
-
-
-/*
-fun {Init}
-	local Dict P IsDone in
-		Dict = {AlterDictionary.new}
-		P = {MergeDict NumFile Dict IsDone}
-
-		{LaunchThread NumFile P}
-
-		if IsDone then skip end
-		
-		Dict
-		
-		%{ParseDict Dict}
-	end
-end
-*/
 
 %PART SaveDict	
 proc {ProcessMajDict S Dict P}
@@ -288,7 +254,6 @@ end
 		[] W1|W2|nil then 
 			{ParseWords OtherPhrases}
 		[] W1|W2|W3|T then 
-			%{Send Port (W1#W2)#W3 }
 			((W1#W2)#W3)|{TwoGram W2|W3|T OtherPhrases}
 		end
 		
@@ -296,7 +261,7 @@ end
 
 	fun{ParseWords Ptext}
 		case Ptext
-		of nil then nil %{Send Port 0}
+		of nil then nil
 		[] H|T then {OneGram H T}
 		end
 	end
